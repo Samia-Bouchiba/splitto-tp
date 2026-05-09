@@ -16,3 +16,10 @@ it('3 personnes : c doit 10€ à a, b est équilibré', () => {
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({ from: 'c', to: 'a', amount: 10 });
   });
+
+it('4 personnes : 2 settlements minimum (pas 3)', () => {
+    const result = simplifyDebts({ a: 30, b: -20, c: -10, d: 0 });
+    expect(result).toHaveLength(2);
+    expect(result).toContainEqual({ from: 'b', to: 'a', amount: 20 });
+    expect(result).toContainEqual({ from: 'c', to: 'a', amount: 10 });
+  });
