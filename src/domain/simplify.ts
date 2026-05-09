@@ -1,8 +1,6 @@
 import type { Balances, Settlement } from './types';
 
-export function simplifyDebts(balances: Balances): Settlement[] {
-  const settlements: Settlement[] = [];
-
+function buildParties(balances: Balances) {
   const creditors: { id: string; amount: number }[] = [];
   const debtors: { id: string; amount: number }[] = [];
 
@@ -11,6 +9,13 @@ export function simplifyDebts(balances: Balances): Settlement[] {
     if (rounded > 0) creditors.push({ id, amount: rounded });
     else if (rounded < 0) debtors.push({ id, amount: Math.abs(rounded) });
   }
+
+  return { creditors, debtors };
+}
+
+export function simplifyDebts(balances: Balances): Settlement[] {
+  const settlements: Settlement[] = [];
+  const { creditors, debtors } = buildParties(balances);
 
   let i = 0, j = 0;
   while (i < creditors.length && j < debtors.length) {
