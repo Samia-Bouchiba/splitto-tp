@@ -1,0 +1,149 @@
+{
+  "consumer": {
+    "name": "splitto-frontend"
+  },
+  "interactions": [
+    {
+      "description": "une requête de balances pour un groupe existant",
+      "providerStates": [
+        {
+          "name": "group-1 a 3 membres et 2 dépenses"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/groups/group-1/balances"
+      },
+      "response": {
+        "body": {
+          "balances": {
+            "member-alice": 20
+          },
+          "groupId": "group-1",
+          "settlements": [
+            {
+              "amount": 10,
+              "from": "member-bob",
+              "to": "member-alice"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.balances": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.balances['member-alice']": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.groupId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.settlements": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.settlements[*].amount": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.settlements[*].from": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.settlements[*].to": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "status": {}
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "une requête de balances pour un groupe inexistant",
+      "providerStates": [
+        {
+          "name": "aucun groupe inexistant"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/groups/inexistant/balances"
+      },
+      "response": {
+        "body": {
+          "error": "Group not found"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.error": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "status": {}
+        },
+        "status": 404
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "13.2.0"
+    },
+    "pactRust": {
+      "ffi": "0.4.22",
+      "models": "1.2.3"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "splitto-api"
+  }
+}
