@@ -33,3 +33,10 @@ it('groupe vide → aucun settlement', () => {
     const result = simplifyDebts({});
     expect(result).toHaveLength(0);
   });
+
+it('montants décimaux : arrondis à 2 décimales', () => {
+    const result = simplifyDebts({ alice: 66.67, bob: -33.33, charlie: -33.34 });
+    expect(result).toHaveLength(2);
+    const total = result.reduce((sum, s) => sum + s.amount, 0);
+    expect(Math.abs(total - 66.67)).toBeLessThan(0.01);
+  });
