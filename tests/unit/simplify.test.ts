@@ -28,3 +28,8 @@ it('tous les soldes à 0 → aucun settlement', () => {
     const result = simplifyDebts({ a: 0, b: 0, c: 0 });
     expect(result).toHaveLength(0);
   });
+
+it('groupe vide → aucun settlement', () => {
+    const result = simplifyDebts({});
+    expect(result).toHaveLength(0);
+  });
